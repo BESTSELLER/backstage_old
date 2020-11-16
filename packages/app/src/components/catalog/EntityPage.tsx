@@ -43,6 +43,7 @@ import { Router as KubernetesRouter } from '@backstage/plugin-kubernetes';
 import {
   Router as GitHubInsightsRouter,
   isPluginApplicableToEntity as isGitHubAvailable,
+  ContributorsCard,
   ReadMeCard,
   LanguagesCard,
   ReleasesCard,
@@ -143,6 +144,7 @@ const OverviewContent = ({ entity }: { entity: Entity }) => (
     {isGitHubAvailable(entity) && (
       <>
         <Grid item md={6}>
+          <ContributorsCard entity={entity} />
           <LanguagesCard entity={entity} />
           <ReleasesCard entity={entity} />
         </Grid>
