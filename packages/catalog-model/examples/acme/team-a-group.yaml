@@ -13,12 +13,11 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: User
 metadata:
-  name: breanna.davison
+  name: andrei.predoiu
 spec:
   profile:
-    displayName: Breanna Davison
-    email: breanna-davison@example.com
-    picture: https://example.com/staff/breanna.jpeg
+    displayName: Andrei Predoiu
+    email: andrei.predoiu@bestseller.com
   memberOf: [team-a]
 ---
 apiVersion: backstage.io/v1alpha1
