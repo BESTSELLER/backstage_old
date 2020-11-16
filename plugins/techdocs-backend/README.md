@@ -43,5 +43,5 @@ Any of these can be extended. If we want to publish to a external static file se
 
 ## Links
 
-- [Frontend part of the plugin](https://github.com/backstage/backstage/tree/master/plugins/techdocs)
+- [Frontend part of the plugin](https://github.com/BESTSELLER/backstage/tree/master/plugins/techdocs)
 - [The Backstage homepage](https://backstage.io)

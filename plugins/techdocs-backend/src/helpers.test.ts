@@ -45,7 +45,7 @@ describe('getDocFilesFromRepository', () => {
         namespace: 'default',
         annotations: {
           'backstage.io/techdocs-ref':
-            'url:https://github.com/backstage/backstage/blob/master/mkdocs.yml',
+            'url:https://github.com/BESTSELLER/backstage/blob/master/mkdocs.yml',
         },
         name: 'mytestcomponent',
         description: 'A component for testing',
@@ -93,7 +93,7 @@ describe('getDocFilesFromRepository', () => {
         namespace: 'default',
         annotations: {
           'backstage.io/techdocs-ref':
-            'url:https://github.com/backstage/backstage/blob/master/subfolder/mkdocs.yml',
+            'url:https://github.com/BESTSELLER/backstage/blob/master/subfolder/mkdocs.yml',
         },
         name: 'mytestcomponent',
         description: 'A component for testing',

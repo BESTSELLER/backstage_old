@@ -27,7 +27,7 @@ describe('<AboutCard /> GitHub', () => {
         name: 'software',
         annotations: {
           'backstage.io/managed-by-location':
-            'github:https://github.com/backstage/backstage/blob/master/software.yaml',
+            'github:https://github.com/BESTSELLER/backstage/blob/master/software.yaml',
         },
       },
       spec: {
@@ -40,11 +40,11 @@ describe('<AboutCard /> GitHub', () => {
     expect(getByText('service')).toBeInTheDocument();
     expect(getByText('View Source').closest('a')).toHaveAttribute(
       'href',
-      'https://github.com/backstage/backstage/blob/master/software.yaml',
+      'https://github.com/BESTSELLER/backstage/blob/master/software.yaml',
     );
     expect(getByText('View Source').closest('a')).toHaveAttribute(
       'edithref',
-      'https://github.com/backstage/backstage/edit/master/software.yaml',
+      'https://github.com/BESTSELLER/backstage/edit/master/software.yaml',
     );
   });
 });

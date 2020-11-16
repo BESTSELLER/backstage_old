@@ -153,7 +153,7 @@ describe('PlaceholderProcessor', () => {
         {
           type: 'github',
           target:
-            'https://github.com/backstage/backstage/a/b/catalog-info.yaml',
+            'https://github.com/BESTSELLER/backstage/a/b/catalog-info.yaml',
         },
       ),
     ).resolves.toEqual({
@@ -164,7 +164,7 @@ describe('PlaceholderProcessor', () => {
     });
 
     expect(read).toBeCalledWith(
-      'https://github.com/backstage/backstage/a/file.txt',
+      'https://github.com/BESTSELLER/backstage/a/file.txt',
     );
   });
 
@@ -188,7 +188,7 @@ describe('PlaceholderProcessor', () => {
         {
           type: 'github',
           target:
-            'https://github.com/backstage/backstage/a/b/catalog-info.yaml',
+            'https://github.com/BESTSELLER/backstage/a/b/catalog-info.yaml',
         },
       ),
     ).resolves.toEqual({
@@ -199,7 +199,7 @@ describe('PlaceholderProcessor', () => {
     });
 
     expect(read).toBeCalledWith(
-      'https://github.com/backstage/backstage/a/b/file.json',
+      'https://github.com/BESTSELLER/backstage/a/b/file.json',
     );
   });
 
@@ -221,7 +221,7 @@ describe('PlaceholderProcessor', () => {
         {
           type: 'github',
           target:
-            'https://github.com/backstage/backstage/a/b/catalog-info.yaml',
+            'https://github.com/BESTSELLER/backstage/a/b/catalog-info.yaml',
         },
       ),
     ).resolves.toEqual({
@@ -232,7 +232,7 @@ describe('PlaceholderProcessor', () => {
     });
 
     expect(read).toBeCalledWith(
-      'https://github.com/backstage/backstage/a/file.yaml',
+      'https://github.com/BESTSELLER/backstage/a/file.yaml',
     );
   });
 
@@ -251,14 +251,15 @@ describe('PlaceholderProcessor', () => {
           metadata: { name: 'n' },
           spec: {
             data: {
-              $text: 'https://github.com/backstage/backstage/catalog-info.yaml',
+              $text:
+                'https://github.com/BESTSELLER/backstage/catalog-info.yaml',
             },
           },
         },
         {
           type: 'github',
           target:
-            'https://github.com/backstage/backstage/a/b/catalog-info.yaml',
+            'https://github.com/BESTSELLER/backstage/a/b/catalog-info.yaml',
         },
       ),
     ).resolves.toEqual({
@@ -269,7 +270,7 @@ describe('PlaceholderProcessor', () => {
     });
 
     expect(read).toBeCalledWith(
-      'https://github.com/backstage/backstage/catalog-info.yaml',
+      'https://github.com/BESTSELLER/backstage/catalog-info.yaml',
     );
   });
 
@@ -288,7 +289,8 @@ describe('PlaceholderProcessor', () => {
           metadata: { name: 'n' },
           spec: {
             data: {
-              $text: 'https://github.com/backstage/backstage/catalog-info.yaml',
+              $text:
+                'https://github.com/BESTSELLER/backstage/catalog-info.yaml',
             },
           },
         },
@@ -305,7 +307,7 @@ describe('PlaceholderProcessor', () => {
     });
 
     expect(read).toBeCalledWith(
-      'https://github.com/backstage/backstage/catalog-info.yaml',
+      'https://github.com/BESTSELLER/backstage/catalog-info.yaml',
     );
   });
 
@@ -349,7 +351,7 @@ describe('yamlPlaceholderResolver', () => {
   const params: ResolverParams = {
     key: 'a',
     value: './file.yaml',
-    baseUrl: 'https://github.com/backstage/backstage/a/b/catalog-info.yaml',
+    baseUrl: 'https://github.com/BESTSELLER/backstage/a/b/catalog-info.yaml',
     read,
   };
 
@@ -393,7 +395,7 @@ describe('jsonPlaceholderResolver', () => {
   const params: ResolverParams = {
     key: 'a',
     value: './file.json',
-    baseUrl: 'https://github.com/backstage/backstage/a/b/catalog-info.yaml',
+    baseUrl: 'https://github.com/BESTSELLER/backstage/a/b/catalog-info.yaml',
     read,
   };
 

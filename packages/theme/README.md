@@ -18,5 +18,5 @@ $ yarn add @backstage/theme
 
 ## Documentation
 
-- [Backstage Readme](https://github.com/backstage/backstage/blob/master/README.md)
-- [Backstage Documentation](https://github.com/backstage/backstage/blob/master/docs/README.md)
+- [Backstage Readme](https://github.com/BESTSELLER/backstage/blob/master/README.md)
+- [Backstage Documentation](https://github.com/BESTSELLER/backstage/blob/master/docs/README.md)

@@ -73,7 +73,7 @@ export const ErrorPage = ({
           </Link>
           ... or if you think this is a bug, please file an{' '}
           <Link
-            href="https://github.com/backstage/backstage/issues"
+            href="https://github.com/BESTSELLER/backstage/issues"
             rel="noopener noreferrer"
           >
             issue.
