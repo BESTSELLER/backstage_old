@@ -1,0 +1,13 @@
+appConfig:
+  app:
+    baseUrl: https://backstage.bestsellerit.com
+    title: Backstage
+  backend:
+    baseUrl: https://backstage.bestsellerit.com
+    cors:
+      origin: https://backstage.bestsellerit.com
+  lighthouse:
+    baseUrl: https://backstage.bestsellerit.com/lighthouse-api
+  techdocs:
+    storageUrl: https://backstage.bestsellerit.com/api/techdocs/static/docs
+    requestUrl: https://backstage.bestsellerit.com/api/techdocs

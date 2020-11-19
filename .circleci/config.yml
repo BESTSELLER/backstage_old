@@ -1,0 +1,190 @@
+version: 2.1
+orbs:
+  secret-injector: bestsellerit/secret-injector@0.2.7
+jobs:
+  build:
+    docker:
+      - image: circleci/node:14.15.1
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASS
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - checkout
+      - setup_remote_docker
+      # Beginning of yarn setup, keep in sync between all workflows.
+      - run:
+        - name: yarn install
+        - command: yarn install
+      - run:
+        - name: verify doc links
+        - command: node scripts/verify-links.js
+      - run:
+        - name: prettier
+        - command: yarn prettier:check
+      - run:
+        - name: lint
+        - command: yarn lerna -- run lint --since origin/master
+      - run:
+        - name: type checking and declarations
+        - command: yarn tsc:full
+      - run:
+        - name: build all packages
+        - command: yarn lerna -- run build
+      - run:
+        - name: verify type dependencies
+        - command: yarn lint:type-deps
+      - run:
+        - name: test all packages
+        - command: yarn lerna -- run test -- --coverage
+      - run:
+        - name: verify plugin template
+        - command: yarn lerna -- run diff -- --check
+      # End of yarn setup
+      - run:
+          - name: ensure clean working directory
+          - command: |
+              if files=$(git ls-files --exclude-standard --others --modified) && [[ -z "$files" ]]; then
+                exit 0
+              else
+                echo ""
+                echo "Working directory has been modified:"
+                echo ""
+                git status --short
+                echo ""
+                exit 1
+              fi
+      - run:
+          name: Install envsubt
+          command: |
+            apk update
+            apk add gettext
+      - run:
+          name: replace strings
+          command: |
+            source /tmp/secrets.env
+            envsubst < ./Dockerfile > Dockerfile.temp
+      - run:
+          name: docker-build
+          command: |
+            yarn docker-build
+      - run:
+          name: Docker stuff
+          command: |
+            source /tmp/secrets.env
+            TAG=$K8S_CLUSTER_docker_registry_url/$SHORT/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+            docker build . -f Dockerfile.temp -t ${TAG}
+            docker login -u $DOCKER_username -p $DOCKER_password $K8S_CLUSTER_docker_registry_url
+            docker push $TAG
+#  deploy:
+#    docker:
+#      - image: microsoft/azure-cli:latest
+#        auth:
+#          username: $DOCKERHUB_USER
+#          password: $DOCKERHUB_PASS
+#    steps:
+#      - attach_workspace:
+#          at: /tmp
+#      - checkout
+#      - run:
+#          name: Setup Azure CLI
+#          command: |
+#            source /tmp/secrets.env
+#            az login --service-principal -u $K8S_CLUSTER_appId --password $K8S_CLUSTER_password --tenant $K8S_CLUSTER_tenant
+#            az account set --subscription $K8S_CLUSTER_subscription_id
+#            az aks get-credentials --resource-group $K8S_CLUSTER_resource_group --name $CLUSTER_NAME
+#            az aks install-cli
+#      - run:
+#          name: Install envsubt
+#          command: |
+#            apk update
+#            apk add gettext
+#      - run:
+#          name: replace strings
+#          command: |
+#            source /tmp/secrets.env
+#            envsubst < ./deployment.yml > ./deployment-var.yml
+#            cat ./deployment-var.yml
+#      - run:
+#          name: create kubernetes service
+#          command: |
+#            source /tmp/secrets.env
+#            kubectl apply -f ./deployment-var.yml --namespace=$NAMESPACE
+#      - run:
+#          name: replace strings
+#          command: |
+#            source /tmp/secrets.env
+#            envsubst < ./deploymentDB.yml > ./deploymentDB-var.yml
+#            cat ./deploymentDB-var.yml
+#      - run:
+#          name: create kubernetes service
+#          command: |
+#            source /tmp/secrets.env
+#            kubectl apply -f ./deploymentDB-var.yml --namespace=$NAMESPACE
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - secret-injector/dump-secrets:
+          context: es02-dev
+          filters:
+            branches:
+              only:
+                - master
+      - build:
+          context: es02-dev
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - secret-injector/dump-secrets
+      - deploy:
+          context: es02-dev
+          requires:
+            - build
+  deploy-prod:
+    jobs:
+      - secret-injector/dump-secrets:
+          context: es02-prod
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^[0-9]+(\.[0-9]+)*$/
+      - build:
+          context: es02-prod
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^[0-9]+(\.[0-9]+)*$/
+          requires:
+            - secret-injector/dump-secrets
+      - deploy:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^[0-9]+(\.[0-9]+)*$/
+          context: es02-prod
+          requires:
+            - build
+  build-for-feature-branch:
+    jobs:
+      - secret-injector/dump-secrets:
+          context: es02-dev
+          filters:
+            branches:
+              only:
+                - /^feature\/(.)+$/
+      - build:
+          context: es02-dev
+          filters:
+            branches:
+              only:
+                - /^feature\/(.)+$/
+          requires:
+            - secret-injector/dump-secrets
