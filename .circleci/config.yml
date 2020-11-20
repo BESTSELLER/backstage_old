@@ -1,13 +1,18 @@
 version: 2.1
 orbs:
   secret-injector: bestsellerit/secret-injector@0.2.7
-jobs:
-  build:
+
+executors:
+  nodejs:
     docker:
       - image: circleci/node:14.15.1
         auth:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASS
+
+jobs:
+  build:
+    executor: nodejs
     steps:
       - attach_workspace:
           at: /tmp
@@ -15,36 +20,36 @@ jobs:
       - setup_remote_docker
       # Beginning of yarn setup, keep in sync between all workflows.
       - run:
-        - name: yarn install
-        - command: yarn install
+          name: yarn install
+          command: yarn install
       - run:
-        - name: verify doc links
-        - command: node scripts/verify-links.js
+          name: verify doc links
+          command: node scripts/verify-links.js
       - run:
-        - name: prettier
-        - command: yarn prettier:check
+          name: prettier
+          command: yarn prettier:check
       - run:
-        - name: lint
-        - command: yarn lerna -- run lint --since origin/master
+          name: lint
+          command: yarn lerna -- run lint --since origin/master
       - run:
-        - name: type checking and declarations
-        - command: yarn tsc:full
+          name: type checking and declarations
+          command: yarn tsc:full
       - run:
-        - name: build all packages
-        - command: yarn lerna -- run build
+          name: build all packages
+          command: yarn lerna -- run build
       - run:
-        - name: verify type dependencies
-        - command: yarn lint:type-deps
+          name: verify type dependencies
+          command: yarn lint:type-deps
       - run:
-        - name: test all packages
-        - command: yarn lerna -- run test -- --coverage
+          name: test all packages
+          command: yarn lerna -- run test -- --coverage
       - run:
-        - name: verify plugin template
-        - command: yarn lerna -- run diff -- --check
+          name: verify plugin template
+          command: yarn lerna -- run diff -- --check
       # End of yarn setup
       - run:
-          - name: ensure clean working directory
-          - command: |
+            name: ensure clean working directory
+            command: |
               if files=$(git ls-files --exclude-standard --others --modified) && [[ -z "$files" ]]; then
                 exit 0
               else
@@ -77,16 +82,16 @@ jobs:
             docker build . -f Dockerfile.temp -t ${TAG}
             docker login -u $DOCKER_username -p $DOCKER_password $K8S_CLUSTER_docker_registry_url
             docker push $TAG
-#  deploy:
-#    docker:
-#      - image: microsoft/azure-cli:latest
-#        auth:
-#          username: $DOCKERHUB_USER
-#          password: $DOCKERHUB_PASS
-#    steps:
-#      - attach_workspace:
-#          at: /tmp
-#      - checkout
+  deploy:
+    docker:
+      - image: microsoft/azure-cli:latest
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASS
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - checkout
 #      - run:
 #          name: Setup Azure CLI
 #          command: |
