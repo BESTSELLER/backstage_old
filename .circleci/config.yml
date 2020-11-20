@@ -48,18 +48,18 @@ jobs:
           command: yarn lerna -- run diff -- --check
       # End of yarn setup
       - run:
-            name: ensure clean working directory
-            command: |
-              if files=$(git ls-files --exclude-standard --others --modified) && [[ -z "$files" ]]; then
-                exit 0
-              else
-                echo ""
-                echo "Working directory has been modified:"
-                echo ""
-                git status --short
-                echo ""
-                exit 1
-              fi
+          name: ensure clean working directory
+          command: |
+            if files=$(git ls-files --exclude-standard --others --modified) && [[ -z "$files" ]]; then
+              exit 0
+            else
+              echo ""
+              echo "Working directory has been modified:"
+              echo ""
+              git status --short
+              echo ""
+              exit 1
+            fi
       - run:
           name: Install envsubt
           command: |
