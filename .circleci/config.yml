@@ -17,7 +17,8 @@ jobs:
       - attach_workspace:
           at: /tmp
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 19.03.13
       # Beginning of yarn setup, keep in sync between all workflows.
       - run:
           name: yarn install
