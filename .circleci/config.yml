@@ -169,7 +169,7 @@ workflows:
           name: env
           vault-path: ID/auth/dev
           format: secret
-          output-filename: secrets.secrets
+          output-filename: secrets.secret
       - build:
           context: id01-prod
           filters:
