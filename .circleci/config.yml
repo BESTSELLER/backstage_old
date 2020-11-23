@@ -70,11 +70,7 @@ jobs:
           name: replace strings
           command: |
             source /tmp/secrets.env
-            envsubst < ./Dockerfile > Dockerfile.temp
-      - run:
-          name: docker-build
-          command: |
-            yarn docker-build
+            envsubst < ./deployment.yaml > deployment_subst.yaml && mv ./deployment_subst.yaml deployment.yaml
       - run:
           name: Docker stuff
           command: |
@@ -85,62 +81,72 @@ jobs:
             docker push $TAG
   deploy:
     docker:
-      - image: microsoft/azure-cli:latest
+      - image: google/cloud-sdk:alpine
         auth:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASS
     steps:
+      - checkout
       - attach_workspace:
           at: /tmp
-      - checkout
-#      - run:
-#          name: Setup Azure CLI
-#          command: |
-#            source /tmp/secrets.env
-#            az login --service-principal -u $K8S_CLUSTER_appId --password $K8S_CLUSTER_password --tenant $K8S_CLUSTER_tenant
-#            az account set --subscription $K8S_CLUSTER_subscription_id
-#            az aks get-credentials --resource-group $K8S_CLUSTER_resource_group --name $CLUSTER_NAME
-#            az aks install-cli
-#      - run:
-#          name: Install envsubt
-#          command: |
-#            apk update
-#            apk add gettext
-#      - run:
-#          name: replace strings
-#          command: |
-#            source /tmp/secrets.env
-#            envsubst < ./deployment.yml > ./deployment-var.yml
-#            cat ./deployment-var.yml
-#      - run:
-#          name: create kubernetes service
-#          command: |
-#            source /tmp/secrets.env
-#            kubectl apply -f ./deployment-var.yml --namespace=$NAMESPACE
-#      - run:
-#          name: replace strings
-#          command: |
-#            source /tmp/secrets.env
-#            envsubst < ./deploymentDB.yml > ./deploymentDB-var.yml
-#            cat ./deploymentDB-var.yml
-#      - run:
-#          name: create kubernetes service
-#          command: |
-#            source /tmp/secrets.env
-#            kubectl apply -f ./deploymentDB-var.yml --namespace=$NAMESPACE
+      - run:
+          name: gcloud login
+          command: |
+            source /tmp/secrets
+            gcloud auth activate-service-account --key-file=/tmp/cluster_secret.json
+      - run:
+          name: install kubectl
+          command: |
+            curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+            chmod +x ./kubectl
+            mv ./kubectl /usr/local/bin/kubectl
+      - run:
+          name: connect to the cluster
+          command: |
+            source /tmp/secrets
+            gcloud container clusters get-credentials $K8S_CLUSTER_cluster_name --project $K8S_CLUSTER_project_id --zone europe-west4
+      - run:
+          name: Install envsubt
+          command: |
+            apk update
+            apk add gettext
+      - run:
+          name: replace strings
+          command: |
+            source /tmp/secrets
+            if [ ${CIRCLE_BRANCH} == "master" ]
+            then
+              export DEPLOY_VERSION=''
+              export SECRET_VERSION=prod
+            else
+              export DEPLOY_VERSION=-$CIRCLE_BRANCH
+              echo 'export DEPLOY_VERSION="-$CIRCLE_BRANCH"' >> $BASH_ENV
+              source ${BASH_ENV}
+              export SECRET_VERSION=$CIRCLE_BRANCH
+            fi
+            envsubst < ./secrets.yaml > ./secrets_var.yaml && mv ./secrets_var.yaml ./secrets.yaml
+            envsubst < ./deployment.yml > ./deployment_var.yml && mv ./deployment_var.yml ./deployment.yml
+      - secret-injector/inject:
+          app-name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
+          deploy-file: ./deployment.yml
+          secret-file: secrets.yaml
+      - run:
+          name: create kubernetes service
+          command: |
+            kubectl apply -f ./deployment.yml
 
 workflows:
   version: 2
   build-and-deploy:
     jobs:
       - secret-injector/dump-secrets:
-          context: es02-dev
+          context: id01-dev
           filters:
             branches:
               only:
                 - master
       - build:
-          context: es02-dev
+          context: id01-dev
           filters:
             branches:
               only:
@@ -148,20 +154,20 @@ workflows:
           requires:
             - secret-injector/dump-secrets
       - deploy:
-          context: es02-dev
+          context: id01-dev
           requires:
             - build
   deploy-prod:
     jobs:
       - secret-injector/dump-secrets:
-          context: es02-prod
+          context: id01-prod
           filters:
             branches:
               ignore: /.*/
             tags:
               only: /^[0-9]+(\.[0-9]+)*$/
       - build:
-          context: es02-prod
+          context: id01-prod
           filters:
             branches:
               ignore: /.*/
@@ -175,19 +181,19 @@ workflows:
               ignore: /.*/
             tags:
               only: /^[0-9]+(\.[0-9]+)*$/
-          context: es02-prod
+          context: id01-prod
           requires:
             - build
   build-for-feature-branch:
     jobs:
       - secret-injector/dump-secrets:
-          context: es02-dev
+          context: id01-dev
           filters:
             branches:
               only:
                 - /^feature\/(.)+$/
       - build:
-          context: es02-dev
+          context: id01-dev
           filters:
             branches:
               only:
