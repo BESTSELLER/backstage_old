@@ -144,6 +144,7 @@ workflows:
                 - master
       - secret-injector/dump-secrets:
           name: env
+          context: id01-dev
           requires:
             - gke
           vault-path: ID/auth/dev
@@ -177,6 +178,7 @@ workflows:
           name: env
           vault-path: ID/auth/dev
           format: secret
+          context: id01-dev
           output-filename: secrets.secret
       - build:
           context: id01-prod
