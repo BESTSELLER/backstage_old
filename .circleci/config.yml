@@ -120,16 +120,16 @@ jobs:
               export SECRET_VERSION=$CIRCLE_BRANCH
             fi
             envsubst < ./secrets.yaml > ./secrets_var.yaml && mv ./secrets_var.yaml ./secrets.yaml
-            envsubst < ./deployment.yml > ./deployment_var.yml && mv ./deployment_var.yml ./deployment.yml
+            envsubst < ./deployment.yaml > ./deployment_var.yml && mv ./deployment_var.yml ./deployment.yaml
       - secret-injector/inject:
           app-name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
-          deploy-file: ./deployment.yml
-          secret-file: secrets.yaml
+          deploy-file: ./deployment.yaml
+          secret-file: secrets
       - run:
           name: create kubernetes service
           command: |
             kubectl create secret generic $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION --from-env-file=/tmp/secrets.secret --dry-run --save-config -o yaml | kubectl apply -f -
-            kubectl apply -f ./deployment.yml
+            kubectl apply -f ./deployment.yaml
 
 workflows:
   version: 2
