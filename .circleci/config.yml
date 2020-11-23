@@ -136,11 +136,19 @@ workflows:
   build-and-deploy:
     jobs:
       - secret-injector/dump-secrets:
+          name: gke
           context: id01-dev
           filters:
             branches:
               only:
                 - master
+      - secret-injector/dump-secrets:
+          name: env
+          requires:
+            - gke
+          vault-path: ID/auth/dev
+          format: secret
+          output-filename: secrets.secret
       - build:
           context: id01-dev
           filters:
@@ -148,7 +156,7 @@ workflows:
               only:
                 - master
           requires:
-            - secret-injector/dump-secrets
+            - env
       - deploy:
           context: id01-dev
           requires:
