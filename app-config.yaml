@@ -155,24 +155,12 @@ catalog:
       #    groupFilter: securityEnabled eq false and mailEnabled eq true and groupTypes/any(c:c+eq+'Unified')
 
   locations:
-    # Backstage example components
+    # Example ORG
     - type: url
-      target: https://github.com/BESTSELLER/backstage/blob/master/packages/catalog-model/examples/all-components.yaml
-    # Example component for github-actions
+      target: https://github.com/BESTSELLER/backstage-config/blob/master/org.yaml
+    # Example svc
     - type: url
-      target: https://github.com/BESTSELLER/backstage/blob/master/plugins/github-actions/examples/sample.yaml
-    # Example component for techdocs
-    - type: url
-      target: https://github.com/BESTSELLER/backstage/blob/master/plugins/techdocs-backend/examples/documented-component/documented-component.yaml
-    # Backstage example APIs
-    - type: url
-      target: https://github.com/BESTSELLER/backstage/blob/master/packages/catalog-model/examples/all-apis.yaml
-    # Backstage example templates
-    - type: url
-      target: https://github.com/BESTSELLER/backstage/blob/master/plugins/scaffolder-backend/sample-templates/all-templates.yaml
-    # Backstage example groups and users
-    - type: url
-      target: https://github.com/BESTSELLER/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
+      target: https://github.com/BESTSELLER/identity-management/blob/master/component.yaml
 
 scaffolder:
   github:
