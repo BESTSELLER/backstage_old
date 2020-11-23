@@ -147,7 +147,7 @@ workflows:
           context: id01-dev
           requires:
             - gke
-          vault-path: ID/auth/dev
+          vault-path: ID/backstage/dev
           format: secret
           output-filename: secrets.secret
       - build:
@@ -176,7 +176,7 @@ workflows:
           requires:
             - gke
           name: env
-          vault-path: ID/auth/dev
+          vault-path: ID/backstage/prod
           format: secret
           context: id01-dev
           output-filename: secrets.secret
