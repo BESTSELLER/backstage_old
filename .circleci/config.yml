@@ -67,11 +67,6 @@ jobs:
             sudo apt update
             sudo apt install gettext
       - run:
-          name: replace strings
-          command: |
-            source /tmp/secrets.env
-            envsubst < ./deployment.yaml > deployment_subst.yaml && mv ./deployment_subst.yaml deployment.yaml
-      - run:
           name: Docker stuff
           command: |
             source /tmp/secrets.env
