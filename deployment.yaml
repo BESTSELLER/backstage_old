@@ -46,7 +46,9 @@ spec:
             # Further work is needed around the routing in the frontend or react-router before we can support that.
             - name: APP_CONFIG_backend_baseUrl
               value: http://localhost:8001/api/v1/namespaces/$CIRCLE_PROJECT_REPONAME$HOST_ENV/services/$CIRCLE_PROJECT_REPONAME$HOST_ENV-backend:http/proxy
-
+          envFrom:
+            - secretRef:
+                name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
           ports:
             - name: http
               containerPort: 7000

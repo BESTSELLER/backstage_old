@@ -128,6 +128,7 @@ jobs:
       - run:
           name: create kubernetes service
           command: |
+            kubectl create secret generic $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION --from-env-file=/tmp/secrets.secret --dry-run --save-config -o yaml | kubectl apply -f -
             kubectl apply -f ./deployment.yml
 
 workflows:
@@ -155,12 +156,20 @@ workflows:
   deploy-prod:
     jobs:
       - secret-injector/dump-secrets:
+          name: gke
           context: id01-prod
           filters:
             branches:
               ignore: /.*/
             tags:
               only: /^[0-9]+(\.[0-9]+)*$/
+      - secret-injector/dump-secrets:
+          requires:
+            - gke
+          name: env
+          vault-path: ID/auth/dev
+          format: secret
+          output-filename: secrets.secrets
       - build:
           context: id01-prod
           filters:
@@ -169,7 +178,7 @@ workflows:
             tags:
               only: /^[0-9]+(\.[0-9]+)*$/
           requires:
-            - secret-injector/dump-secrets
+            - env
       - deploy:
           filters:
             branches:
@@ -179,19 +188,3 @@ workflows:
           context: id01-prod
           requires:
             - build
-  build-for-feature-branch:
-    jobs:
-      - secret-injector/dump-secrets:
-          context: id01-dev
-          filters:
-            branches:
-              only:
-                - /^feature\/(.)+$/
-      - build:
-          context: id01-dev
-          filters:
-            branches:
-              only:
-                - /^feature\/(.)+$/
-          requires:
-            - secret-injector/dump-secrets
