@@ -121,10 +121,6 @@ jobs:
             fi
             envsubst < ./secrets.yaml > ./secrets_var.yaml && mv ./secrets_var.yaml ./secrets.yaml
             envsubst < ./deployment.yaml > ./deployment_var.yml && mv ./deployment_var.yml ./deployment.yaml
-      - secret-injector/inject:
-          app-name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
-          deploy-file: ./deployment.yaml
-          secret-file: secrets
       - run:
           name: create kubernetes service
           command: |
