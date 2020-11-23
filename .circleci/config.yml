@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  secret-injector: bestsellerit/secret-injector@0.2.7
+  secret-injector: bestsellerit/secret-injector@1.3.0
 
 executors:
   nodejs:
@@ -69,7 +69,7 @@ jobs:
       - run:
           name: Docker stuff
           command: |
-            source /tmp/secrets.env
+            source /tmp/secrets
             TAG=$K8S_CLUSTER_docker_registry_url/$SHORT/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
             yarn workspace example-backend backstage-cli backend:build-image --build --tag $TAG
             docker login -u $DOCKER_username -p $DOCKER_password $K8S_CLUSTER_docker_registry_url
