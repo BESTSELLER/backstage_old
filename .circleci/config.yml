@@ -157,6 +157,7 @@ workflows:
           requires:
             - gke
           vault-path: ID/data/backstage/dev
+          output-filename: secrets.secret
           format: secret
           <<: *dev_context
           <<: *dev_filter
@@ -182,6 +183,7 @@ workflows:
             - gke
           name: env
           vault-path: ID/data/backstage/prod
+          output-filename: secrets.secret
           format: secret
           <<: *prod_filter
           <<: *prod_context
