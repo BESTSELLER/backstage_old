@@ -154,8 +154,6 @@ workflows:
           <<: *dev_filter
       - secret-injector/dump-secrets:
           name: env
-          requires:
-            - gke
           vault-path: ID/data/backstage/dev
           format: secret
           <<: *dev_context
@@ -178,8 +176,6 @@ workflows:
           <<: *prod_filter
           <<: *prod_context
       - secret-injector/dump-secrets:
-          requires:
-            - gke
           name: env
           vault-path: ID/data/backstage/prod
           format: secret
