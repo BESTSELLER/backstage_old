@@ -17,7 +17,7 @@ const siteConfig = {
   url: 'https://backstage.io', // Your website URL
   cname: 'backstage.io',
   baseUrl: '/', // Base URL for your project */
-  editUrl: 'https://github.com/BESTSELLER/backstage/edit/master/docs/',
+  editUrl: 'https://github.com/backstage/backstage/edit/master/docs/',
 
   // Used for publishing and more
   projectName: 'backstage',

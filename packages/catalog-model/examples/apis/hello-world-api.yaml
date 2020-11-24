@@ -6,7 +6,7 @@ metadata:
 spec:
   type: grpc
   lifecycle: deprecated
-  owner: andrei.predoiu@bestseller.com
+  owner: grpc@example.com
   definition: |
     // Copyright 2015 gRPC authors.
     //
