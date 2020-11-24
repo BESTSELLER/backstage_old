@@ -1,14 +1,9 @@
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: $CIRCLE_PROJECT_REPONAME$HOST_ENV
+
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: $CIRCLE_PROJECT_REPONAME$HOST_ENV-backend
-  namespace: $CIRCLE_PROJECT_REPONAME$HOST_ENV
 spec:
   replicas: 1
   selector:
@@ -43,7 +38,7 @@ spec:
             # Note that we're not setting app.baseUrl here, as setting the base path is not working at the moment.
             # Further work is needed around the routing in the frontend or react-router before we can support that.
             - name: APP_CONFIG_backend_baseUrl
-              value: http://localhost:8001/api/v1/namespaces/$CIRCLE_PROJECT_REPONAME$HOST_ENV/services/$CIRCLE_PROJECT_REPONAME$HOST_ENV-backend:http/proxy
+              value: http://localhost:8001/api/v1/namespaces/default/services/$CIRCLE_PROJECT_REPONAME$HOST_ENV-backend:http/proxy
           envFrom:
             - secretRef:
                 name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
@@ -82,21 +77,19 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: $CIRCLE_PROJECT_REPONAME$HOST_ENV-config
-  namespace: $CIRCLE_PROJECT_REPONAME$HOST_ENV
 data:
   # Note that the config here is only applied to the backend. The frontend config is applied at build time.
   # To override frontend config in this deployment, use `APP_CONFIG_` env vars.
   app-config: |
     app:
-      baseUrl: http://localhost:8001/api/v1/namespaces/$CIRCLE_PROJECT_REPONAME$HOST_ENV/services/$CIRCLE_PROJECT_REPONAME$HOST_ENV-backend:http/proxy
+      baseUrl: http://localhost:8001/api/v1/namespaces/default/services/$CIRCLE_PROJECT_REPONAME$HOST_ENV-backend:http/proxy
     backend:
-      baseUrl: http://localhost:8001/api/v1/namespaces/$CIRCLE_PROJECT_REPONAME$HOST_ENV/services/$CIRCLE_PROJECT_REPONAME$HOST_ENV-backend:http/proxy
+      baseUrl: http://localhost:8001/api/v1/namespaces/default/services/$CIRCLE_PROJECT_REPONAME$HOST_ENV-backend:http/proxy
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: $CIRCLE_PROJECT_REPONAME$HOST_ENV-backend
-  namespace: $CIRCLE_PROJECT_REPONAME$HOST_ENV
 spec:
   selector:
     app: $CIRCLE_PROJECT_REPONAME$HOST_ENV
