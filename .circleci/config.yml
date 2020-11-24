@@ -127,70 +127,72 @@ jobs:
             kubectl create secret generic $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION --from-env-file=/tmp/secrets.secret --dry-run --save-config -o yaml | kubectl apply -f -
             kubectl apply -f ./deployment.yaml
 
+#setup macro pointers
+prod_filter: &prod_filter
+  filters:
+    branches:
+      ignore: /.*/
+    tags:
+      only: /^[0-9]+(\.[0-9]+)*(-.*)*$/
+prod_context: &prod_context
+  context: id01-prod
+
+dev_filter: &dev_filter
+  filters:
+    branches:
+      only: dev
+dev_context: &dev_context
+  context: id01-dev
+
 workflows:
   version: 2
-  build-and-deploy:
+  build-and-deploy-dev:
     jobs:
       - secret-injector/dump-secrets:
           name: gke
-          context: id01-dev
-          filters:
-            branches:
-              only:
-                - master
+          <<: *dev_context
+          <<: *dev_filter
       - secret-injector/dump-secrets:
           name: env
-          context: id01-dev
           requires:
             - gke
           vault-path: ID/data/backstage/dev
           format: secret
-          output-filename: secrets.secret
+          <<: *dev_context
+          <<: *dev_filter
       - build:
-          context: id01-dev
-          filters:
-            branches:
-              only:
-                - master
           requires:
             - env
+            - gke
+          <<: *dev_context
+          <<: *dev_filter
       - deploy:
-          context: id01-dev
           requires:
             - build
-  deploy-prod:
+          <<: *dev_context
+          <<: *dev_filter
+  build-and-release-prod:
     jobs:
       - secret-injector/dump-secrets:
           name: gke
-          context: id01-prod
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^[0-9]+(\.[0-9]+)*$/
+          <<: *prod_filter
+          <<: *prod_context
       - secret-injector/dump-secrets:
           requires:
             - gke
           name: env
           vault-path: ID/data/backstage/prod
           format: secret
-          context: id01-dev
-          output-filename: secrets.secret
+          <<: *prod_filter
+          <<: *prod_context
       - build:
-          context: id01-prod
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^[0-9]+(\.[0-9]+)*$/
           requires:
             - env
+            - gke
+          <<: *prod_filter
+          <<: *prod_context
       - deploy:
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^[0-9]+(\.[0-9]+)*$/
-          context: id01-prod
           requires:
             - build
+          <<: *prod_filter
+          <<: *prod_context
