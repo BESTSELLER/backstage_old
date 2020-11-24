@@ -23,13 +23,11 @@ spec:
     spec:
       containers:
         - name: backend
-          # This image is built with `yarn docker-build` in the repo root.
-          # Replace this with your own image to deploy your own Backstage app.
           image: $K8S_CLUSTER_docker_registry_url/$SHORT/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
-          imagePullPolicy: Never
 
           command: [node, packages/backend]
-          args: [--config, app-config.yaml, --config, k8s-config.yaml]
+#          args: [--config, app-config.yaml, --config, f]
+          args: [--config, app-config.yaml]
 
           env:
             # We set this to development to make the backend start with incomplete configuration. In a production
@@ -129,7 +127,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: spotify/backstage:latest
+          image: $K8S_CLUSTER_docker_registry_url/$SHORT/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
