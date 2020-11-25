@@ -1,9 +1,38 @@
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
+  labels:
+    app: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
+    component: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
+      component: frontend
+  template:
+    metadata:
+      labels:
+        app: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
+        component: frontend
+    spec:
+      containers:
+        - name: app
+          image: $K8S_CLUSTER_docker_registry_url/$SHORT/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: app
+              protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION-backend
+  labels:
+    app: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
+    component: backend
 spec:
   replicas: 1
   selector:
@@ -19,87 +48,49 @@ spec:
       containers:
         - name: backend
           image: $K8S_CLUSTER_docker_registry_url/$SHORT/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
-
-          command: [node, packages/backend]
-#          args: [--config, app-config.yaml, --config, f]
-          args: [--config, app-config.yaml]
-
-          env:
-            # We set this to development to make the backend start with incomplete configuration. In a production
-            # deployment you will want to make sure that you have a full configuration, and remove any plugins that
-            # you are not using.
-            - name: NODE_ENV
-              value: development
-
-            # This makes it possible for the app to reach the backend when serving through `kubectl proxy`
-            # If you expose the service using for example an ingress controller, you should
-            # switch this out or remove it.
-            #
-            # Note that we're not setting app.baseUrl here, as setting the base path is not working at the moment.
-            # Further work is needed around the routing in the frontend or react-router before we can support that.
-            - name: APP_CONFIG_backend_baseUrl
-              value: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net:http/proxy
-          envFrom:
-            - secretRef:
-                name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
+          imagePullPolicy: IfNotPresent
           ports:
-            - name: http
-              containerPort: 7000
-
-          volumeMounts:
-            - name: config-volume
-              mountPath: /usr/src/app/k8s-config.yaml
-              subPath: k8s-config.yaml
-
-          resources:
-            limits:
-              cpu: 1
-              memory: 0.5Gi
-
-          readinessProbe:
-            httpGet:
-              port: 7000
-              path: /healthcheck
-          livenessProbe:
-            httpGet:
-              port: 7000
-              path: /healthcheck
-
-      volumes:
-        - name: config-volume
-          configMap:
-            name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION-config
-            items:
-              - key: app-config
-                path: k8s-config.yaml
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION-config
-data:
-  # Note that the config here is only applied to the backend. The frontend config is applied at build time.
-  # To override frontend config in this deployment, use `APP_CONFIG_` env vars.
-  app-config: |
-    app:
-      baseUrl: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net:http/proxy
-    backend:
-      baseUrl: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net:http/proxy
+            - containerPort: 7000
+              name: backend
+              protocol: TCP
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
+  labels:
+    app: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
+    component: frontend
 spec:
+  type: ClusterIP
+  selector:
+    app: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
+    component: frontend
+  ports:
+    - name: frontend
+      port: 80
+      protocol: TCP
+      targetPort: app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION-backend
+  labels:
+    app: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
+    component: backend
+spec:
+  type: ClusterIP
   selector:
     app: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
     component: backend
   ports:
-    - name: http
-      port: 80
-      targetPort: http
+    - name: backend
+      port: 7000
+      protocol: TCP
+      targetPort: backend
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   annotations:
@@ -109,6 +100,9 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     kubernetes.io/tls-acme: "true"
   name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
+  labels:
+    app: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
+    component: ingress
 spec:
   rules:
     - host: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net
@@ -116,7 +110,12 @@ spec:
         paths:
           - backend:
               serviceName: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
-              servicePort: 80
+              servicePort: frontend
+            path: /
+          - backend:
+              serviceName: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION-backend
+              servicePort: backend
+            path: /backend
   tls:
     - hosts:
         - $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net
