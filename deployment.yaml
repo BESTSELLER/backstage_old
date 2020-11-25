@@ -38,7 +38,7 @@ spec:
             # Note that we're not setting app.baseUrl here, as setting the base path is not working at the moment.
             # Further work is needed around the routing in the frontend or react-router before we can support that.
             - name: APP_CONFIG_backend_baseUrl
-              value: http://localhost:8001/api/v1/namespaces/default/services/$CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION:http/proxy
+              value: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net:http/proxy
           envFrom:
             - secretRef:
                 name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
@@ -82,9 +82,9 @@ data:
   # To override frontend config in this deployment, use `APP_CONFIG_` env vars.
   app-config: |
     app:
-      baseUrl: http://localhost:8001/api/v1/namespaces/default/services/$CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION:http/proxy
+      baseUrl: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net:http/proxy
     backend:
-      baseUrl: http://localhost:8001/api/v1/namespaces/default/services/$CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION:http/proxy
+      baseUrl: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net:http/proxy
 ---
 apiVersion: v1
 kind: Service
