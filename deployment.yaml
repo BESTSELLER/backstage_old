@@ -3,17 +3,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: $CIRCLE_PROJECT_REPONAME$HOST_ENV
+  name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: $CIRCLE_PROJECT_REPONAME$HOST_ENV
+      app: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
       component: backend
   template:
     metadata:
       labels:
-        app: $CIRCLE_PROJECT_REPONAME$HOST_ENV
+        app: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
         component: backend
     spec:
       containers:
@@ -38,7 +38,7 @@ spec:
             # Note that we're not setting app.baseUrl here, as setting the base path is not working at the moment.
             # Further work is needed around the routing in the frontend or react-router before we can support that.
             - name: APP_CONFIG_backend_baseUrl
-              value: http://localhost:8001/api/v1/namespaces/default/services/$CIRCLE_PROJECT_REPONAME$HOST_ENV:http/proxy
+              value: http://localhost:8001/api/v1/namespaces/default/services/$CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION:http/proxy
           envFrom:
             - secretRef:
                 name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
@@ -68,7 +68,7 @@ spec:
       volumes:
         - name: config-volume
           configMap:
-            name: $CIRCLE_PROJECT_REPONAME$HOST_ENV-config
+            name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION-config
             items:
               - key: app-config
                 path: k8s-config.yaml
@@ -76,23 +76,23 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: $CIRCLE_PROJECT_REPONAME$HOST_ENV-config
+  name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION-config
 data:
   # Note that the config here is only applied to the backend. The frontend config is applied at build time.
   # To override frontend config in this deployment, use `APP_CONFIG_` env vars.
   app-config: |
     app:
-      baseUrl: http://localhost:8001/api/v1/namespaces/default/services/$CIRCLE_PROJECT_REPONAME$HOST_ENV:http/proxy
+      baseUrl: http://localhost:8001/api/v1/namespaces/default/services/$CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION:http/proxy
     backend:
-      baseUrl: http://localhost:8001/api/v1/namespaces/default/services/$CIRCLE_PROJECT_REPONAME$HOST_ENV:http/proxy
+      baseUrl: http://localhost:8001/api/v1/namespaces/default/services/$CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION:http/proxy
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: $CIRCLE_PROJECT_REPONAME$HOST_ENV
+  name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
 spec:
   selector:
-    app: $CIRCLE_PROJECT_REPONAME$HOST_ENV
+    app: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
     component: backend
   ports:
     - name: http
