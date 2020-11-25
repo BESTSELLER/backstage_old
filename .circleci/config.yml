@@ -67,6 +67,10 @@ jobs:
             sudo apt update
             sudo apt install gettext
       - run:
+          name: Replace App-config
+          command: |
+            mv ./app-config-deploy.yaml ./app-config.yaml
+      - run:
           name: Docker stuff
           command: |
             source /tmp/secrets

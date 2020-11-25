@@ -1,0 +1,140 @@
+app:
+  title: BESTSELLER Backstage
+  baseUrl: http://localhost:3000
+  googleAnalyticsTrackingId: # UA-000000-0
+
+backend:
+  baseUrl: http://localhost:7000
+  listen:
+    port: 7000
+  database:
+    client: sqlite3
+    connection: ':memory:'
+  cors:
+    origin: http://localhost:3000
+    methods: [GET, POST, PUT, DELETE]
+    credentials: true
+  csp:
+    connect-src: ["'self'", 'http:', 'https:']
+  # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
+
+# See README.md in the proxy-backend plugin for information on the configuration format
+proxy:
+  '/circleci/api':
+    target: https://circleci.com/api/v1.1
+    headers:
+      Circle-Token:
+        $env: CIRCLECI_AUTH_TOKEN
+
+organization:
+  name: BESTSELLER
+
+techdocs:
+  storageUrl: http://localhost:7000/api/techdocs/static/docs
+  requestUrl: http://localhost:7000/api/techdocs
+  generators:
+    techdocs: 'docker'
+
+sentry:
+  organization: BESTSELLER
+
+kubernetes:
+  serviceLocatorMethod: 'multiTenant'
+  clusterLocatorMethods:
+    - 'config'
+  clusters: []
+
+integrations:
+  github:
+    - host: github.com
+      token:
+        $env: GITHUB_TOKEN
+
+catalog:
+  rules:
+    - allow: [Component, API, Group, User, Template, Location]
+
+  processors:
+    githubOrg:
+      providers:
+        - target: https://github.com
+          token:
+            $env: GITHUB_TOKEN
+        #### Example for how to add your GitHub Enterprise instance using the API:
+        # - target: https://ghe.example.net
+        #   apiBaseUrl: https://ghe.example.net/api/v3
+        #   token:
+        #     $env: GHE_TOKEN
+    microsoftGraphOrg:
+      providers:
+        - target: https://graph.microsoft.com/v1.0
+          authority: https://login.microsoftonline.com
+          tenantId:
+            $env: AUTH_MICROSOFT_TENANT_ID
+          clientId:
+            $env: AUTH_MICROSOFT_CLIENT_ID
+          clientSecret:
+            $env: AUTH_MICROSOFT_CLIENT_SECRET
+          userFilter: accountEnabled eq true and userType eq 'member'
+          groupFilter: securityEnabled eq false and mailEnabled eq true and groupTypes/any(c:c+eq+'Unified')
+
+  locations:
+    # Example ORG
+    - type: url
+      target: https://github.com/BESTSELLER/backstage-config/blob/master/org.yaml
+    # Example svc
+    - type: url
+      target: https://github.com/BESTSELLER/identity-management/blob/master/component.yaml
+
+scaffolder:
+  github:
+    token:
+      $env: GITHUB_TOKEN
+
+auth:
+  providers:
+    google:
+      development:
+        clientId:
+          $env: AUTH_GOOGLE_CLIENT_ID
+        clientSecret:
+          $env: AUTH_GOOGLE_CLIENT_SECRET
+    github:
+      development:
+        clientId:
+          $env: AUTH_GITHUB_CLIENT_ID
+        clientSecret:
+          $env: AUTH_GITHUB_CLIENT_SECRET
+        enterpriseInstanceUrl:
+          $env: AUTH_GITHUB_ENTERPRISE_INSTANCE_URL
+costInsights:
+  engineerCost: 200000
+  products:
+    computeEngine:
+      name: Compute Engine
+      icon: compute
+    cloudDataflow:
+      name: Cloud Dataflow
+      icon: data
+    cloudStorage:
+      name: Cloud Storage
+      icon: storage
+    bigQuery:
+      name: BigQuery
+      icon: search
+  metrics:
+    DAU:
+      name: Daily Active Users
+      default: true
+    MSC:
+      name: Monthly Subscribers
+homepage:
+  clocks:
+    - label: UTC
+      timezone: UTC
+    - label: NYC
+      timezone: 'America/New_York'
+    - label: CPH
+      timezone: 'Europe/Copenhagen'
+    - label: TYO
+      timezone: 'Asia/Tokyo'
