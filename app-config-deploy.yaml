@@ -93,12 +93,14 @@ scaffolder:
 
 auth:
   providers:
-    google:
+    microsoft:
       development:
         clientId:
-          $env: AUTH_GOOGLE_CLIENT_ID
+          $env: AUTH_MICROSOFT_CLIENT_ID
         clientSecret:
-          $env: AUTH_GOOGLE_CLIENT_SECRET
+          $env: AUTH_MICROSOFT_CLIENT_SECRET
+        tenantId:
+          $env: AUTH_MICROSOFT_TENANT_ID
     github:
       development:
         clientId:
