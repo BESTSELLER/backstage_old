@@ -75,9 +75,12 @@ jobs:
           command: |
             source /tmp/secrets
             TAG=$K8S_CLUSTER_docker_registry_url/$SHORT/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+            TAGFE=$K8S_CLUSTER_docker_registry_url/$SHORT/$CIRCLE_PROJECT_REPONAME-frontend:$CIRCLE_SHA1
             yarn workspace example-backend backstage-cli backend:build-image --build --tag $TAG
+            yarn workspace example-app build && docker build . -t $TAGFE
             docker login -u $DOCKER_username -p $DOCKER_password $K8S_CLUSTER_docker_registry_url
             docker push $TAG
+            docker push $TAGFE
   deploy:
     docker:
       - image: google/cloud-sdk:alpine

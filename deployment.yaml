@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: $K8S_CLUSTER_docker_registry_url/$SHORT/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+          image: $K8S_CLUSTER_docker_registry_url/$SHORT/$CIRCLE_PROJECT_REPONAME-frontend:$CIRCLE_SHA1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
