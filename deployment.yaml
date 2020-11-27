@@ -119,6 +119,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
   name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
   labels:
     app: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
@@ -135,7 +136,7 @@ spec:
           - backend:
               serviceName: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION-backend
               servicePort: backend
-            path: /backend
+            path: /backend(/|$)(.*)
   tls:
     - hosts:
         - $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net
