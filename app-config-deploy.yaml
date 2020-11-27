@@ -1,10 +1,8 @@
 app:
   title: BESTSELLER Backstage
-  baseUrl: http://localhost:3000
   googleAnalyticsTrackingId: # UA-000000-0
 
 backend:
-  baseUrl: http://localhost:7000
   listen:
     port: 7000
   database:
@@ -30,8 +28,10 @@ organization:
   name: BESTSELLER
 
 techdocs:
-  storageUrl: http://localhost:7000/api/techdocs/static/docs
-  requestUrl: http://localhost:7000/api/techdocs
+  storageUrl:
+    $env: TECHDOCS_STORAGE_URL
+  requestUrl:
+    $env: TECHDOCS_REQUEST_URL
   generators:
     techdocs: 'docker'
 
@@ -132,11 +132,11 @@ costInsights:
       name: Monthly Subscribers
 homepage:
   clocks:
+    - label: CPH
+      timezone: 'Europe/Copenhagen'
     - label: UTC
       timezone: UTC
     - label: NYC
       timezone: 'America/New_York'
-    - label: CPH
-      timezone: 'Europe/Copenhagen'
     - label: TYO
       timezone: 'Asia/Tokyo'
