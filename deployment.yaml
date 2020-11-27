@@ -7,8 +7,8 @@ metadata:
 data:
   APP_CONFIG_app_baseUrl: https://$CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net/
   APP_CONFIG_backend_baseUrl: https://$CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net/backend
-  TECHDOCS_STORAGE_URL: https://$CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net/backend/api/techdocs/static/docs
-  TECHDOCS_REQUEST_URL: https://$CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net/backend/api/techdocs
+  APP_CONFIG_techdocs_storageUrl: https://$CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net/backend/api/techdocs/static/docs
+  APP_CONFIG_techdocs_requestUrl: https://$CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net/backend/api/techdocs
 ---
 apiVersion: apps/v1
 kind: Deployment

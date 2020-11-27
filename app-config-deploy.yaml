@@ -1,8 +1,10 @@
 app:
   title: BESTSELLER Backstage
+  baseUrl: http://localhost:3000
   googleAnalyticsTrackingId: # UA-000000-0
 
 backend:
+  baseUrl: http://localhost:7000
   listen:
     port: 7000
   database:
@@ -28,10 +30,8 @@ organization:
   name: BESTSELLER
 
 techdocs:
-  storageUrl:
-    $env: TECHDOCS_STORAGE_URL
-  requestUrl:
-    $env: TECHDOCS_REQUEST_URL
+  storageUrl: http://localhost:7000/api/techdocs/static/docs
+  requestUrl: http://localhost:7000/api/techdocs
   generators:
     techdocs: 'docker'
 
