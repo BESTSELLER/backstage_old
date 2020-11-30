@@ -145,16 +145,16 @@ spec:
 apiVersion: getambassador.io/v2
 kind: Mapping
 metadata:
-  name: ambassador.id01-dev
+  name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION-backend
 spec:
   prefix: /
-  service: ambassador.id01-dev
+  service: backstage-dev
 ---
 apiVersion: getambassador.io/v2
 kind: Mapping
 metadata:
-  name: ambassador.id01-dev-backend
+  name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION-backend
 spec:
-  prefix: /backend
-  service: ambassador.id01-dev-backend
+  prefix: /backend/
+  service: backstage-dev-backend:7000
 ---
