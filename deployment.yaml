@@ -145,7 +145,7 @@ spec:
 apiVersion: getambassador.io/v2
 kind: Mapping
 metadata:
-  name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION-backend
+  name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
 spec:
   prefix: /
   service: backstage-dev
