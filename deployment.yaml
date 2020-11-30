@@ -27,7 +27,7 @@ spec:
     metadata:
       labels:
         app: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
-        component: frontendh
+        component: frontend
     spec:
       containers:
         - name: app
