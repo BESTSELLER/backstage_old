@@ -5,10 +5,10 @@ metadata:
   labels:
     app: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
 data:
-  APP_CONFIG_app_baseUrl: https://ambassador.id01-dev.k8s.bestcorp.net/
-  APP_CONFIG_backend_baseUrl: https://ambassador.id01-dev.k8s.bestcorp.net/backend
-  APP_CONFIG_techdocs_storageUrl: https://ambassador.id01-dev.k8s.bestcorp.net/backend/api/techdocs/static/docs
-  APP_CONFIG_techdocs_requestUrl: https://ambassador.id01-dev.k8s.bestcorp.net/backend/api/techdocs
+  APP_CONFIG_app_baseUrl: https://$CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net/
+  APP_CONFIG_backend_baseUrl: https://$CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net/backend
+  APP_CONFIG_techdocs_storageUrl: https://$CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net/backend/api/techdocs/static/docs
+  APP_CONFIG_techdocs_requestUrl: https://$CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net/backend/api/techdocs
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -27,7 +27,7 @@ spec:
     metadata:
       labels:
         app: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
-        component: frontend
+        component: frontendh
     spec:
       containers:
         - name: app
@@ -109,38 +109,37 @@ spec:
       port: 7000
       protocol: TCP
       targetPort: backend
-#---
-#apiVersion: networking.k8s.io/v1beta1
-#kind: Ingress
-#metadata:
-#  annotations:
-#    kubernetes.io/ingress.class: nginx
-#    nginx.ingress.kubernetes.io/backend-protocol: HTTP
-#    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-#    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-#    kubernetes.io/tls-acme: "true"
-#    nginx.ingress.kubernetes.io/rewrite-target: /$2
-#  name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
-#  labels:
-#    app: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
-#    component: ingress
-#spec:
-#  rules:
-#    - host: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net
-#      http:
-#        paths:
-#          - backend:
-#              serviceName: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
-#              servicePort: frontend
-#            path: /
-#          - backend:
-#              serviceName: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION-backend
-#              servicePort: backend
-#            path: /backend(/|$)(.*)
-#  tls:
-#    - hosts:
-#        - $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net
-#      secretName: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION-k8s-bestcorp-net-tls
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    kubernetes.io/tls-acme: "true"
+  name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
+  labels:
+    app: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
+    component: ingress
+spec:
+  rules:
+    - host: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net
+      http:
+        paths:
+          - backend:
+              serviceName: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
+              servicePort: frontend
+            path: /
+          - backend:
+              serviceName: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION-backend
+              servicePort: backend
+            path: /backend/
+  tls:
+    - hosts:
+        - $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION.k8s.bestcorp.net
+      secretName: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION-k8s-bestcorp-net-tls
 ---
 apiVersion: getambassador.io/v2
 kind: Mapping
