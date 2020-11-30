@@ -86,7 +86,7 @@ async function main() {
   const service = createServiceBuilder(module)
     .loadConfig(config)
     .addRouter('', await healthcheck(healthcheckEnv))
-    .addRouter('backend/api', apiRouter);
+    .addRouter('/backend/api', apiRouter);
 
   await service.start().catch(err => {
     console.log(err);
