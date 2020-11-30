@@ -65,18 +65,18 @@ catalog:
         #   apiBaseUrl: https://ghe.example.net/api/v3
         #   token:
         #     $env: GHE_TOKEN
-#    microsoftGraphOrg:
-#      providers:
-#        - target: https://graph.microsoft.com/v1.0
-#          authority: https://login.microsoftonline.com
-#          tenantId:
-#            $env: AUTH_MICROSOFT_TENANT_ID
-#          clientId:
-#            $env: AUTH_MICROSOFT_CLIENT_ID
-#          clientSecret:
-#            $env: AUTH_MICROSOFT_CLIENT_SECRET
-#          userFilter: accountEnabled eq true and userType eq 'member'
-#          groupFilter: securityEnabled eq false and mailEnabled eq true and groupTypes/any(c:c+eq+'Unified')
+    microsoftGraphOrg:
+      providers:
+        - target: https://graph.microsoft.com/v1.0
+          authority: https://login.microsoftonline.com
+          tenantId:
+            $env: AUTH_MICROSOFT_TENANT_ID
+          clientId:
+            $env: AUTH_MICROSOFT_CLIENT_ID
+          clientSecret:
+            $env: AUTH_MICROSOFT_CLIENT_SECRET
+          userFilter: accountEnabled eq true and userType eq 'member'
+          groupFilter: securityEnabled eq false and mailEnabled eq true and groupTypes/any(c:c+eq+'Unified')
 
   locations:
     # Example ORG
