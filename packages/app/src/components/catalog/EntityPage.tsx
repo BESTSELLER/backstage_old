@@ -74,6 +74,7 @@ import {
   Router as TravisCIRouter,
 } from '@roadiehq/backstage-plugin-travis-ci';
 import React, { ReactNode } from 'react';
+import { SonarQubeCard } from '@backstage/plugin-sonarqube';
 
 export const CICDSwitcher = ({ entity }: { entity: Entity }) => {
   // This component is just an example of how you can implement your company's logic in entity page.
@@ -114,6 +115,9 @@ export const CICDSwitcher = ({ entity }: { entity: Entity }) => {
 const RecentCICDRunsSwitcher = ({ entity }: { entity: Entity }) => {
   let content: ReactNode;
   switch (true) {
+    case isCircleCIAvailable(entity):
+      content = null;
+      break;
     case isJenkinsAvailable(entity):
       content = <JenkinsLatestRunCard branch="master" variant="gridItem" />;
       break;
@@ -156,6 +160,9 @@ const ComponentOverviewContent = ({ entity }: { entity: Entity }) => (
         </Grid>
       </>
     )}
+    <Grid item xs={12} sm={6} md={4}>
+      <SonarQubeCard entity={entity} />
+    </Grid>
     {isLighthouseAvailable(entity) && (
       <Grid item sm={4}>
         <LastLighthouseAuditCard variant="gridItem" />

@@ -52,6 +52,17 @@ proxy:
       Authorization:
         $env: BUILDKITE_TOKEN
 
+  '/sonarqube':
+    target: https://your.sonarqube.instance.com/api
+    allowedMethods: ['GET']
+    headers:
+      Authorization:
+        # Content: 'Basic base64("<api-key>:")' <-- note the trailing ':'
+        # Example: Basic bXktYXBpLWtleTo=
+        $env: SONARQUBE_AUTH_HEADER
+
+sonarQube:
+  baseUrl: https://your.sonarqube.instance.com
 organization:
   name: My Company
 

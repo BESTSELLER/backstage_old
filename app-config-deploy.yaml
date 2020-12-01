@@ -26,6 +26,15 @@ proxy:
       Circle-Token:
         $env: CIRCLECI_AUTH_TOKEN
 
+  '/sonarqube':
+    target: https://your.sonarqube.instance.com/api
+    allowedMethods: ['GET']
+    headers:
+      Authorization:
+        # Content: 'Basic base64("<api-key>:")' <-- note the trailing ':'
+        # Example: Basic bXktYXBpLWtleTo=
+        $env: SONARQUBE_AUTH_HEADER
+
 organization:
   name: BESTSELLER
 
@@ -85,6 +94,8 @@ catalog:
     # Example svc
     - type: url
       target: https://github.com/BESTSELLER/identity-management/blob/master/component.yaml
+    - type: url
+      target: https://github.com/BESTSELLER/dependabot-circleci/blob/master/component.yaml
 
 scaffolder:
   github:
