@@ -42,7 +42,6 @@ import { version as pluginCatalogBackend } from '@backstage/plugin-catalog-backe
 import { version as pluginCircleci } from '@backstage/plugin-circleci/package.json';
 import { version as pluginExplore } from '@backstage/plugin-explore/package.json';
 import { version as pluginGithubActions } from '@backstage/plugin-github-actions/package.json';
-import { version as pluginLighthouse } from '@backstage/plugin-lighthouse/package.json';
 import { version as pluginProxyBackend } from '@backstage/plugin-proxy-backend/package.json';
 import { version as pluginRegisterComponent } from '@backstage/plugin-register-component/package.json';
 import { version as pluginRollbarBackend } from '@backstage/plugin-rollbar-backend/package.json';
@@ -69,7 +68,6 @@ export const packageVersions = {
   '@backstage/plugin-circleci': pluginCircleci,
   '@backstage/plugin-explore': pluginExplore,
   '@backstage/plugin-github-actions': pluginGithubActions,
-  '@backstage/plugin-lighthouse': pluginLighthouse,
   '@backstage/plugin-proxy-backend': pluginProxyBackend,
   '@backstage/plugin-register-component': pluginRegisterComponent,
   '@backstage/plugin-rollbar-backend': pluginRollbarBackend,

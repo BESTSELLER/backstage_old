@@ -37,24 +37,9 @@ import {
   RecentWorkflowRunsCard,
   Router as GitHubActionsRouter,
 } from '@backstage/plugin-github-actions';
-import {
-  isPluginApplicableToEntity as isJenkinsAvailable,
-  LatestRunCard as JenkinsLatestRunCard,
-  Router as JenkinsRouter,
-} from '@backstage/plugin-jenkins';
 import { Router as KubernetesRouter } from '@backstage/plugin-kubernetes';
-import {
-  EmbeddedRouter as LighthouseRouter,
-  isPluginApplicableToEntity as isLighthouseAvailable,
-  LastLighthouseAuditCard,
-} from '@backstage/plugin-lighthouse';
-import { Router as SentryRouter } from '@backstage/plugin-sentry';
 import { EmbeddedDocsRouter as DocsRouter } from '@backstage/plugin-techdocs';
 import { Button, Grid } from '@material-ui/core';
-import {
-  isPluginApplicableToEntity as isBuildkiteAvailable,
-  Router as BuildkiteRouter,
-} from '@roadiehq/backstage-plugin-buildkite';
 import {
   Router as GitHubInsightsRouter,
   isPluginApplicableToEntity as isGitHubAvailable,
@@ -68,11 +53,6 @@ import {
   PullRequestsStatsCard,
   Router as PullRequestsRouter,
 } from '@roadiehq/backstage-plugin-github-pull-requests';
-import {
-  isPluginApplicableToEntity as isTravisCIAvailable,
-  RecentTravisCIBuildsWidget,
-  Router as TravisCIRouter,
-} from '@roadiehq/backstage-plugin-travis-ci';
 import React, { ReactNode } from 'react';
 import { SonarQubeCard } from '@backstage/plugin-sonarqube';
 
@@ -80,18 +60,12 @@ export const CICDSwitcher = ({ entity }: { entity: Entity }) => {
   // This component is just an example of how you can implement your company's logic in entity page.
   // You can for example enforce that all components of type 'service' should use GitHubActions
   switch (true) {
-    case isJenkinsAvailable(entity):
-      return <JenkinsRouter entity={entity} />;
-    case isBuildkiteAvailable(entity):
-      return <BuildkiteRouter entity={entity} />;
     case isCircleCIAvailable(entity):
       return <CircleCIRouter entity={entity} />;
     case isGitHubActionsAvailable(entity):
       return <GitHubActionsRouter entity={entity} />;
     case isCloudbuildAvailable(entity):
       return <CloudbuildRouter entity={entity} />;
-    case isTravisCIAvailable(entity):
-      return <TravisCIRouter entity={entity} />;
     default:
       return (
         <EmptyState
@@ -118,16 +92,10 @@ const RecentCICDRunsSwitcher = ({ entity }: { entity: Entity }) => {
     case isCircleCIAvailable(entity):
       content = null;
       break;
-    case isJenkinsAvailable(entity):
-      content = <JenkinsLatestRunCard branch="master" variant="gridItem" />;
-      break;
     case isGitHubActionsAvailable(entity):
       content = (
         <RecentWorkflowRunsCard entity={entity} limit={4} variant="gridItem" />
       );
-      break;
-    case isTravisCIAvailable(entity):
-      content = <RecentTravisCIBuildsWidget entity={entity} />;
       break;
     default:
       content = null;
@@ -163,11 +131,6 @@ const ComponentOverviewContent = ({ entity }: { entity: Entity }) => (
     <Grid item xs={12} sm={6} md={4}>
       <SonarQubeCard entity={entity} />
     </Grid>
-    {isLighthouseAvailable(entity) && (
-      <Grid item sm={4}>
-        <LastLighthouseAuditCard variant="gridItem" />
-      </Grid>
-    )}
     {isPullRequestsAvailable(entity) && (
       <Grid item sm={4}>
         <PullRequestsStatsCard entity={entity} />
@@ -187,11 +150,6 @@ const ServiceEntityPage = ({ entity }: { entity: Entity }) => (
       path="/ci-cd/*"
       title="CI/CD"
       element={<CICDSwitcher entity={entity} />}
-    />
-    <EntityPageLayout.Content
-      path="/sentry"
-      title="Sentry"
-      element={<SentryRouter entity={entity} />}
     />
     <EntityPageLayout.Content
       path="/api/*"
@@ -232,16 +190,6 @@ const WebsiteEntityPage = ({ entity }: { entity: Entity }) => (
       path="/ci-cd/*"
       title="CI/CD"
       element={<CICDSwitcher entity={entity} />}
-    />
-    <EntityPageLayout.Content
-      path="/lighthouse/*"
-      title="Lighthouse"
-      element={<LighthouseRouter entity={entity} />}
-    />
-    <EntityPageLayout.Content
-      path="/sentry"
-      title="Sentry"
-      element={<SentryRouter entity={entity} />}
     />
     <EntityPageLayout.Content
       path="/docs/*"
