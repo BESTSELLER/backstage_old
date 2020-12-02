@@ -116,9 +116,9 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+    kubernetes.io/tls-acme: 'true'
   name: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
   labels:
     app: $CIRCLE_PROJECT_REPONAME$DEPLOY_VERSION
@@ -157,3 +157,4 @@ spec:
   prefix: /backend/
   service: backstage-dev-backend:7000
 ---
+

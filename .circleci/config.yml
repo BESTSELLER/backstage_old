@@ -23,9 +23,6 @@ jobs:
       - run:
           name: yarn install
           command: yarn install
-      - run:
-          name: verify doc links
-          command: node scripts/verify-links.js
       #      - run:
       #          name: prettier
       #          command: yarn prettier:check
