@@ -27,7 +27,7 @@ proxy:
         $env: CIRCLECI_AUTH_TOKEN
 
   '/sonarqube':
-    target: https://your.sonarqube.instance.com/api
+    target: https://sonarcloud.io/api
     allowedMethods: ['GET']
     headers:
       Authorization:
