@@ -23,6 +23,7 @@ changesets
 Changesets
 chanwit
 Chanwit
+ci
 cisphobia
 cissexist
 classname
@@ -42,6 +43,7 @@ const
 cookiecutter
 css
 dariddler
+dataflow
 deadnaming
 destructured
 dev
@@ -67,9 +69,9 @@ Firekube
 freben
 Fredrik
 github
-Github
+GitHub
 gitlab
-Gitlab
+GitLab
 Grafana
 graphql
 graphviz
@@ -186,6 +188,7 @@ sparklines
 Spotifiers
 spotify
 Spotify
+sqlite
 squidfunk
 src
 stefanalund
@@ -198,6 +201,7 @@ talkdesk
 Talkdesk
 tasklist
 techdocs
+Telenor
 templated
 templater
 Templater

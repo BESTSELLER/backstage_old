@@ -1,5 +1,69 @@
 # @backstage/plugin-catalog-backend
 
+## 0.4.0
+
+### Minor Changes
+
+- 83b6e0c1f: Remove the deprecated fields `ancestors` and `descendants` from the `Group` entity.
+
+  See https://github.com/backstage/backstage/issues/3049 and the PRs linked from it for details.
+
+### Patch Changes
+
+- 6e8bb3ac0: leave unknown placeholder-lookalikes untouched in the catalog processing loop
+- e708679d7: refreshAllLocations uses a child logger of the HigherOrderOperation with a meta `component` : `catalog-all-locations-refresh`
+- 047c018c9: Batch the fetching of relations
+- 38d63fbe1: Fix string template literal
+- Updated dependencies [38e24db00]
+- Updated dependencies [e3bd9fc2f]
+- Updated dependencies [12bbd748c]
+- Updated dependencies [83b6e0c1f]
+- Updated dependencies [e3bd9fc2f]
+  - @backstage/backend-common@0.4.0
+  - @backstage/config@0.1.2
+  - @backstage/catalog-model@0.5.0
+
+## 0.3.0
+
+### Minor Changes
+
+- a9fd599f7: Add Analyze location endpoint to catalog backend. Add catalog-import plugin and replace import-component with it. To start using Analyze location endpoint, you have add it to the `createRouter` function options in the `\backstage\packages\backend\src\plugins\catalog.ts` file:
+
+  ```ts
+  export default async function createPlugin(env: PluginEnvironment) {
+    const builder = new CatalogBuilder(env);
+    const {
+      entitiesCatalog,
+      locationsCatalog,
+      higherOrderOperation,
+      locationAnalyzer, //<--
+    } = await builder.build();
+
+    return await createRouter({
+      entitiesCatalog,
+      locationsCatalog,
+      higherOrderOperation,
+      locationAnalyzer, //<--
+      logger: env.logger,
+    });
+  }
+  ```
+
+### Patch Changes
+
+- b4488ddb0: Added a type alias for PositionError = GeolocationPositionError
+- 08835a61d: Add support for relative targets and implicit types in Location entities.
+- e42402b47: Gracefully handle missing codeowners.
+
+  The CodeOwnersProcessor now also takes a logger as a parameter.
+
+- Updated dependencies [612368274]
+- Updated dependencies [08835a61d]
+- Updated dependencies [a9fd599f7]
+- Updated dependencies [bcc211a08]
+  - @backstage/backend-common@0.3.3
+  - @backstage/catalog-model@0.4.0
+
 ## 0.2.3
 
 ### Patch Changes

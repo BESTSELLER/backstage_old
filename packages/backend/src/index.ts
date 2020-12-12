@@ -25,13 +25,13 @@
 import Router from 'express-promise-router';
 import {
   createServiceBuilder,
-  loadBackendConfig,
   getRootLogger,
-  useHotMemoize,
+  loadBackendConfig,
   notFoundHandler,
   SingleConnectionDatabaseManager,
   SingleHostDiscovery,
   UrlReaders,
+  useHotMemoize,
 } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
 import healthcheck from './plugins/healthcheck';

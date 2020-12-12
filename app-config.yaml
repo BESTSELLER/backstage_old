@@ -35,11 +35,15 @@ proxy:
         # Example: Basic bXktYXBpLWtleTo=
         $env: SONARQUBE_AUTH_HEADER
 
+# Reference documentation http://backstage.io/docs/features/techdocs/configuration
 techdocs:
-  storageUrl: http://localhost:7000/api/techdocs/static/docs
   requestUrl: http://localhost:7000/api/techdocs
+  storageUrl: http://localhost:7000/api/techdocs/static/docs
+  builder: 'local' # Alternatives - 'external'
   generators:
-    techdocs: 'docker'
+    techdocs: 'docker' # Alternatives - 'local'
+  publisher:
+    type: 'local' # Alternatives - 'googleGcs'. Read documentation for using alternatives.
 
 sentry:
   organization: my-company
@@ -100,7 +104,7 @@ catalog:
             $env: GITHUB_TOKEN
         #### Example for how to add your GitHub Enterprise instance using the API:
         # - target: https://ghe.example.net
-        #   apiBaseUrl: https://ghe.example.net/api/v3
+        #   apiBaseUrl: https://ghe.example.net/api
         #   token:
         #     $env: GHE_TOKEN
     ldapOrg:
@@ -170,6 +174,7 @@ scaffolder:
       token:
         $env: AZURE_TOKEN
 auth:
+  environment: development
   ### Providing an auth.session.secret will enable session support in the auth-backend
   # session:
   #   secret: custom session secret
@@ -270,6 +275,9 @@ costInsights:
     bigQuery:
       name: BigQuery
       icon: search
+    events:
+      name: Events
+      icon: data
   metrics:
     DAU:
       name: Daily Active Users
@@ -286,3 +294,5 @@ homepage:
       timezone: 'Europe/Stockholm'
     - label: TYO
       timezone: 'Asia/Tokyo'
+pagerduty:
+  eventsBaseUrl: 'https://events.pagerduty.com/v2'

@@ -33,3 +33,4 @@ export { plugin as CatalogImport } from '@backstage/plugin-catalog-import';
 export { plugin as UserSettings } from '@backstage/plugin-user-settings';
 export { plugin as Search } from '@backstage/plugin-search';
 export { plugin as SonarQube } from '@backstage/plugin-sonarqube';
+export { plugin as Org } from '@backstage/plugin-org';

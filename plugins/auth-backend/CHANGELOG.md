@@ -1,5 +1,31 @@
 # @backstage/plugin-auth-backend
 
+## 0.2.6
+
+### Patch Changes
+
+- Updated dependencies [38e24db00]
+- Updated dependencies [e3bd9fc2f]
+- Updated dependencies [12bbd748c]
+- Updated dependencies [83b6e0c1f]
+- Updated dependencies [e3bd9fc2f]
+  - @backstage/backend-common@0.4.0
+  - @backstage/config@0.1.2
+  - @backstage/catalog-model@0.5.0
+  - @backstage/catalog-client@0.3.3
+
+## 0.2.5
+
+### Patch Changes
+
+- Updated dependencies [612368274]
+- Updated dependencies [08835a61d]
+- Updated dependencies [a9fd599f7]
+- Updated dependencies [bcc211a08]
+  - @backstage/backend-common@0.3.3
+  - @backstage/catalog-model@0.4.0
+  - @backstage/catalog-client@0.3.2
+
 ## 0.2.4
 
 ### Patch Changes

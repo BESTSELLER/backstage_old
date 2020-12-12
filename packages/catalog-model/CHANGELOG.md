@@ -1,5 +1,50 @@
 # @backstage/catalog-model
 
+## 0.5.0
+
+### Minor Changes
+
+- 83b6e0c1f: Remove the deprecated fields `ancestors` and `descendants` from the `Group` entity.
+
+  See https://github.com/backstage/backstage/issues/3049 and the PRs linked from it for details.
+
+### Patch Changes
+
+- Updated dependencies [e3bd9fc2f]
+- Updated dependencies [e3bd9fc2f]
+  - @backstage/config@0.1.2
+
+## 0.4.0
+
+### Minor Changes
+
+- bcc211a08: k8s-plugin: refactor approach to use annotation based label-selector
+
+### Patch Changes
+
+- 08835a61d: Add support for relative targets and implicit types in Location entities.
+- a9fd599f7: Add Analyze location endpoint to catalog backend. Add catalog-import plugin and replace import-component with it. To start using Analyze location endpoint, you have add it to the `createRouter` function options in the `\backstage\packages\backend\src\plugins\catalog.ts` file:
+
+  ```ts
+  export default async function createPlugin(env: PluginEnvironment) {
+    const builder = new CatalogBuilder(env);
+    const {
+      entitiesCatalog,
+      locationsCatalog,
+      higherOrderOperation,
+      locationAnalyzer, //<--
+    } = await builder.build();
+
+    return await createRouter({
+      entitiesCatalog,
+      locationsCatalog,
+      higherOrderOperation,
+      locationAnalyzer, //<--
+      logger: env.logger,
+    });
+  }
+  ```
+
 ## 0.3.1
 
 ### Patch Changes
