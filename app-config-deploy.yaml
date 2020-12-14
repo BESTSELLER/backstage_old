@@ -88,14 +88,12 @@ catalog:
   locations:
     # Example ORG
     - type: url
-      target: https://github.com/BESTSELLER/backstage-config/blob/master/org.yaml
+      target: https://github.com/BESTSELLER/backstage-config/blob/master/locations.yaml
     # Example svc
     - type: url
       target: https://github.com/BESTSELLER/identity-management/blob/master/component.yaml
     - type: url
       target: https://github.com/BESTSELLER/dependabot-circleci/blob/master/component.yaml
-    - type: url
-      target: https://sc-dev.k8s.bestcorp.net/backstage/locations
 
 scaffolder:
   github:
