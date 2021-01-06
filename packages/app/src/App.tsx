@@ -35,6 +35,7 @@ import { Router as RegisterComponentRouter } from '@backstage/plugin-register-co
 import { Router as SettingsRouter } from '@backstage/plugin-user-settings';
 import { Router as ImportComponentRouter } from '@backstage/plugin-catalog-import';
 import { Route, Routes, Navigate } from 'react-router';
+import { datadogRum } from '@datadog/browser-rum';
 
 import { EntityPage } from './components/catalog/EntityPage';
 
@@ -89,6 +90,17 @@ const AppRoutes = () => (
     {...deprecatedAppRoutes}
   </Routes>
 );
+
+datadogRum.init({
+  applicationId: '53913dc0-6aa7-47f4-9a6c-0a1a0ae3d358',
+  clientToken: 'pubced53790ad771f2165e038cb020037da',
+  site: 'datadoghq.eu',
+  service: 'backstage',
+//  env: 'production',
+//  version: '1.0.0',
+  sampleRate: 100,
+  trackInteractions: true
+});
 
 const App = () => (
   <AppProvider>
