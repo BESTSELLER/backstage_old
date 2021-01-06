@@ -63,6 +63,12 @@ import {
 } from '@roadiehq/backstage-plugin-github-pull-requests';
 import React, { ReactNode } from 'react';
 import { SonarQubeCard } from '@backstage/plugin-sonarqube';
+import {
+  GroupProfileCard,
+  MembersListCard,
+  OwnershipCard,
+  UserProfileCard,
+} from '@backstage/plugin-org';
 
 export const CICDSwitcher = ({ entity }: { entity: Entity }) => {
   // This component is just an example of how you can implement your company's logic in entity page.
@@ -123,11 +129,6 @@ const ComponentOverviewContent = ({ entity }: { entity: Entity }) => (
     <Grid item md={6}>
       <AboutCard entity={entity} variant="gridItem" />
     </Grid>
-    {isPagerDutyAvailable(entity) && (
-      <Grid item md={6}>
-        <PagerDutyCard entity={entity} />
-      </Grid>
-    )}
     <RecentCICDRunsSwitcher entity={entity} />
     {isGitHubAvailable(entity) && (
       <>
